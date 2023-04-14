@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../screens/loginAndSignup/Login';
 import SignupScreen from '../screens/loginAndSignup/Signup';
+import MovieDetails from '../screens/MovieDetails';
 import TabNavigation from './TabNavigation';
 
 
@@ -13,6 +14,7 @@ const StackNaviagtion=()=>{
           <Stack.Screen name="Login" component={LoginScreen}   options={options}/>
           <Stack.Screen name="Signup" component={SignupScreen}  options={options} />
           <Stack.Screen name="TabNavigation" component={TabNavigation}  options={options} />
+          <Stack.Screen name="MovieDetails" component={MovieDetails}  options={options} />
         </Stack.Navigator>
       );
 };
