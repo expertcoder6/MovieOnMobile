@@ -16,21 +16,23 @@ import {
 
 import { NavigationContainer } from "@react-navigation/native";
 import StackNaviagtion from './src/navigation/StackNaviagtion';
+import store from './store';
+import { Provider } from 'react-redux';
 
 
 
-const App= () => {
-
+const App = () => {
   return (
-    <NavigationContainer>
-    <SafeAreaView style={{flex:1,backgroundColor:"#fff"}}>
-      <StatusBar
-        barStyle={'dark-content'}
-      />
-      
-      <StackNaviagtion/>
-    </SafeAreaView>
-    </NavigationContainer>
+    <Provider store={store}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+        <NavigationContainer>
+          <StatusBar
+            barStyle={'dark-content'}
+          />
+          <StackNaviagtion />
+        </NavigationContainer>
+      </SafeAreaView>
+    </Provider>
 
   );
 };

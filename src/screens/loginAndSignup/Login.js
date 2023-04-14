@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-login-and-signup/
 
 // Import React and Component
-import React, {useState, createRef} from 'react';
+import React, { useState, createRef } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -15,12 +15,17 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import CustomTextInput from '../../common/CustomTextInput';
+import { serverRequest } from '../../Redux/Action/action';
+import { useDispatch, useSelector } from 'react-redux';
 
-// import AsyncStorage from '@react-native-community/async-storage';
+const LoginScreen = ({ navigation }) => {
 
-// import Loader from './Components/Loader';
+  const dispatch = useDispatch();
+  const currentUser = useSelector(state => state.MovieData)
 
-const LoginScreen = ({navigation}) => {
+  React.useEffect(() => {
+    console.log('login', currentUser)
+  }, [currentUser?.login_data_pocket])
 
 
   return (
@@ -29,13 +34,13 @@ const LoginScreen = ({navigation}) => {
         contentContainerStyle={{
           flex: 1,
           alignContent: 'center',
-          marginTop:50
+          marginTop: 50
         }}>
         <View>
           <KeyboardAvoidingView enabled>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <Image
-                source={{uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tmdb.new.logo.svg/512px-Tmdb.new.logo.svg.png"}}
+                source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tmdb.new.logo.svg/512px-Tmdb.new.logo.svg.png" }}
                 style={{
                   width: '50%',
                   height: 100,
@@ -45,26 +50,31 @@ const LoginScreen = ({navigation}) => {
               />
             </View>
             <View style={styles.SectionStyle}>
-                <CustomTextInput
-               onChangeText={(text) =>
-                {}
-              }
-              placeholder="Enter Email"
+              <CustomTextInput
+                onChangeText={(text) => { }
+                }
+                placeholder="Enter Email"
               />
             </View>
             <View style={styles.SectionStyle}>
               <CustomTextInput
-               onChangeText={(text) =>
-               {}
-              }
-              placeholder="Enter Password"
+                onChangeText={(text) => { }
+                }
+                placeholder="Enter Password"
               />
             </View>
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
-              onPress={() => navigation.navigate('TabNavigation')}
-              >
+              onPress={() =>
+                //  navigation.navigate('TabNavigation')
+                dispatch(serverRequest({
+                  key: 'login_data_pocket',
+                  type: 'get',
+                  data: { id: 2 }
+                }))
+              }
+            >
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
             </TouchableOpacity>
             <Text

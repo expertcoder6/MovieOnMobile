@@ -1,5 +1,6 @@
 
 
+
 // navigations
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -35,7 +36,7 @@ const TabNavigation = () => {
                             <Image
                                 source={HomeIcon}
                                 resizeMode='contain'
-                                style={{tintColor: focused ? '':"#BCBCCD"}}
+                                style={{ tintColor: focused ? '' : "#BCBCCD" }}
                             />
                         </View>
 
@@ -49,7 +50,7 @@ const TabNavigation = () => {
                             <Image
                                 source={Shape}
                                 resizeMode='contain'
-                                style={{tintColor: focused ? '#110E47':""}}  
+                                style={{ tintColor: focused ? '#110E47' : "" }}
                             />
                         </View>
 
@@ -63,7 +64,7 @@ const TabNavigation = () => {
                             <Image
                                 source={FeaturesIcon}
                                 resizeMode='contain'
-                                style={{tintColor: focused ? '#110E47':""}}
+                                style={{ tintColor: focused ? '#110E47' : "" }}
                             />
                         </View>
 
