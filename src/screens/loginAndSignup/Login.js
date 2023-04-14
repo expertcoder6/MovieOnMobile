@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-login-and-signup/
 
 // Import React and Component
-import React, {useState, createRef} from 'react';
+import React, { useState, createRef } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -14,13 +14,14 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
+import { facebook, google } from '../../assests/Images';
 import CustomTextInput from '../../common/CustomTextInput';
 
 // import AsyncStorage from '@react-native-community/async-storage';
 
 // import Loader from './Components/Loader';
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
 
 
   return (
@@ -29,13 +30,13 @@ const LoginScreen = ({navigation}) => {
         contentContainerStyle={{
           flex: 1,
           alignContent: 'center',
-          marginTop:50
+          marginTop: 50
         }}>
         <View>
           <KeyboardAvoidingView enabled>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <Image
-                source={{uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tmdb.new.logo.svg/512px-Tmdb.new.logo.svg.png"}}
+                source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tmdb.new.logo.svg/512px-Tmdb.new.logo.svg.png" }}
                 style={{
                   width: '50%',
                   height: 100,
@@ -45,26 +46,58 @@ const LoginScreen = ({navigation}) => {
               />
             </View>
             <View style={styles.SectionStyle}>
-                <CustomTextInput
-               onChangeText={(text) =>
-                {}
-              }
-              placeholder="Enter Email"
+              <CustomTextInput
+                onChangeText={(text) => { }
+                }
+                placeholder="Enter Email"
               />
             </View>
             <View style={styles.SectionStyle}>
               <CustomTextInput
-               onChangeText={(text) =>
-               {}
-              }
-              placeholder="Enter Password"
+                onChangeText={(text) => { }
+                }
+                placeholder="Enter Password"
               />
+            </View>
+
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center",marginHorizontal:50 ,marginVertical:10}}>
+              <TouchableOpacity style={{flexDirection:"row"}}>
+
+                <Image
+                  source={google}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    resizeMode: 'contain',
+                    marginRight: 8
+                  }}
+                />
+              <Text style={{color:"red",textAlign:"center",marginTop:5,fontWeight:"500",fontSize:17}}>Google</Text>
+
+              </TouchableOpacity>
+
+              <TouchableOpacity style={{flexDirection:"row"}}>
+
+                <Image
+                  source={facebook}
+                  style={{
+                    width: 35,
+                    height: 35,
+                    resizeMode: 'contain',
+                    marginRight: 8
+                  }}
+                />
+
+              <Text style={{color:"#0c3fa6",textAlign:"center",marginTop:7,fontWeight:"500",fontSize:17}}>FaceBook</Text>
+
+              </TouchableOpacity>
+
             </View>
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
               onPress={() => navigation.navigate('TabNavigation')}
-              >
+            >
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
             </TouchableOpacity>
             <Text
@@ -105,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 25,
   },
   buttonTextStyle: {

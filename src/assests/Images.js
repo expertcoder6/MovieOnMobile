@@ -6,4 +6,6 @@ module.exports={
     bellIcon: require("../assests/bellIcon.png"),
     Star: require("../assests/Star.png"),
     Arrow: require("../assests/Aroow.png"),
+    facebook: require("../assests/facebook.png"),
+    google: require("../assests/search.png"),
 }
