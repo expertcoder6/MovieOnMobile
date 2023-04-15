@@ -102,12 +102,12 @@ const LoginScreen = ({ navigation }) => {
               style={styles.buttonStyle}
               activeOpacity={0.5}
               onPress={() =>
-                //  navigation.navigate('TabNavigation')
-                dispatch(serverRequest({
-                  key: 'login_data_pocket',
-                  type: 'get',
-                  data: { id: 2 }
-                }))
+                 navigation.navigate('TabNavigation')
+                // dispatch(serverRequest({
+                //   key: 'login_data_pocket',
+                //   type: 'get',
+                //   data: { id: 2 }
+                // }))
               }
             >
               <Text style={styles.buttonTextStyle}>LOGIN</Text>

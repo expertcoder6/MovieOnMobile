@@ -2,45 +2,41 @@ import React, { useEffect } from "react";
 import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { bellIcon, Union } from "../assests/Images"
 import NowShowingCard from "../common/NowShowingCard"
-import axios from "axios";
 import PopularCard from "../common/PopularCard";
+import { useDispatch, useSelector } from 'react-redux';
+import { serverRequest } from "../Redux/Action/action";
+import { apiEndPoind, apiKey } from "../utils";
+import CustomLoder from "../common/Loder";
 
 const imageBaseUrl = 'https://image.tmdb.org/t/p/original/'
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
 
     //---------- state, redux state, veriable and hooks
+    const dispatch = useDispatch();
     const [nowShowing, setNowShowing] = React.useState([])
     const [popular, setPopular] = React.useState([])
-    const getNowShowing = () => {
+    const { nowShowing_data_pocket, populer_data_pocket ,loading} = useSelector(state => state.MovieData)
 
-        let url = `https://api.themoviedb.org/3/trending/movie/day?api_key=${'a6f6139634800c85fc2bc3327de6e0c8'}`
+    useEffect(() => {
+        if (nowShowing_data_pocket) {
+            setNowShowing(nowShowing_data_pocket?.response)
+        }
+        if (populer_data_pocket) {
+            setPopular(populer_data_pocket?.response)
+        }
+    }, [nowShowing_data_pocket, populer_data_pocket])
 
-        axios.get(url)
-            .then(function (response) {
-                // console.log(response?.data);
-                setNowShowing(response?.data?.results)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    const getPopilar = () => {
-        let url = `https://api.themoviedb.org/3/movie/popular?api_key=${'a6f6139634800c85fc2bc3327de6e0c8'}&language=en-US&page=1`
-
-        axios.get(url)
-            .then(function (response) {
-                // console.log(response?.data);
-                setPopular(response?.data?.results)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
     useEffect(() => {
 
-        getNowShowing()
-        getPopilar()
+        dispatch(serverRequest({
+            key: 'nowShowing_data_pocket',
+            endPoint: apiEndPoind?.url_nowShowing
+        }))
+        dispatch(serverRequest({
+            key: 'populer_data_pocket',
+            endPoint: apiEndPoind?.url_getPopular
+        }))
+        // getPopilar()
     }, [])
 
     const ItemDivider = () => {
@@ -53,7 +49,12 @@ const Home = ({navigation}) => {
             />
         );
     }
+    console.log(loading);
+if( loading){
+    return <CustomLoder/>
+}else{
     return (
+
         <ScrollView style={styles.mainBody}>
             <View style={styles.headerStyle}>
                 <Image
@@ -81,13 +82,15 @@ const Home = ({navigation}) => {
                 showsHorizontalScrollIndicator={false}
                 legacyImplementation={false}
                 data={nowShowing}
-                renderItem={item =>{return( 
-                <TouchableOpacity
-                onPress={()=>navigation.navigate('MovieDetails',{item})}
-                >
-                <NowShowingCard item={item} imageBaseUrl={imageBaseUrl} />
-                </TouchableOpacity>
-                )}}
+                renderItem={item => {
+                    return (
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('MovieDetails', { item })}
+                        >
+                            <NowShowingCard item={item} imageBaseUrl={imageBaseUrl} />
+                        </TouchableOpacity>
+                    )
+                }}
                 style={{ paddingHorizontal: 24 }}
                 ItemSeparatorComponent={ItemDivider}
                 keyExtractor={(item, index) => index.toString()}
@@ -101,18 +104,22 @@ const Home = ({navigation}) => {
                 showsHorizontalScrollIndicator={false}
                 legacyImplementation={false}
                 data={popular}
-                renderItem={item => {return(
-                    <TouchableOpacity
-                    onPress={()=>navigation.navigate('MovieDetails',{item})}
-                    >
-                <PopularCard item={item} imageBaseUrl={imageBaseUrl} />
-                </TouchableOpacity>
-                )}}
+                renderItem={item => {
+                    return (
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('MovieDetails', { item })}
+                        >
+                            <PopularCard item={item} imageBaseUrl={imageBaseUrl} />
+                        </TouchableOpacity>
+                    )
+                }}
                 style={{ marginRight: 24 }}
                 keyExtractor={(item, index) => index.toString()}
             />
         </ScrollView>
     )
+}
+   
 }
 
 export default Home
