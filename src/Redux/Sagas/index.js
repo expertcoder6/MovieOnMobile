@@ -4,6 +4,14 @@ import auth from '@react-native-firebase/auth';
 
 const baseUrl = `https://api.themoviedb.org/3/`
 
+export function* productSaga(data) {
+    console.log('=-=-=-=--=-=-=-=de')
+    yield takeEvery("SERVER_REQUEST", apiCall)
+    yield takeEvery("LOGIN_REQUEST", loginRequestApi)
+    yield takeEvery("SIGNUP_REQUEST", signupRequestApi)
+
+}
+
 export function* apiCall(data) {
     const result = yield call(requestServer, data);
     yield put({ type: "SERVER_RESPONSE", payload: result })
@@ -18,8 +26,6 @@ export function* loginRequestApi(data) {
     }else{
         yield put({ type: "SERVER_ERROR", payload: result })
     }
-
-
 }
 
 export function* signupRequestApi(data) {
@@ -31,16 +37,6 @@ export function* signupRequestApi(data) {
     }else{
         yield put({ type: "SERVER_ERROR", payload: result })
     }
-
-
-}
-
-export function* productSaga(data) {
-    console.log('=-=-=-=--=-=-=-=de')
-    yield takeEvery("SERVER_REQUEST", apiCall)
-    yield takeEvery("LOGIN_REQUEST", loginRequestApi)
-    yield takeEvery("SIGNUP_REQUEST", signupRequestApi)
-
 }
 
 function requestServer(data) {
