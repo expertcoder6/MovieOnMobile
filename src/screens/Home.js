@@ -5,7 +5,7 @@ import NowShowingCard from "../common/NowShowingCard"
 import PopularCard from "../common/PopularCard";
 import { useDispatch, useSelector } from 'react-redux';
 import { serverRequest } from "../Redux/Action/action";
-import { apiEndPoind, apiKey } from "../utils";
+import { apiEndPoind, apiKey, removeDataFromAsyncStorage } from "../utils";
 import CustomLoder from "../common/Loder";
 
 const imageBaseUrl = 'https://image.tmdb.org/t/p/original/'
@@ -15,8 +15,8 @@ const Home = ({ navigation }) => {
     const dispatch = useDispatch();
     const [nowShowing, setNowShowing] = React.useState([])
     const [popular, setPopular] = React.useState([])
-    const { nowShowing_data_pocket, populer_data_pocket ,loading} = useSelector(state => state.MovieData)
-
+    const { nowShowing_data_pocket, populer_data_pocket, loading } = useSelector(state => state.MovieData)
+    const [isVisible, setVisible] = React.useState(false)
     useEffect(() => {
         if (nowShowing_data_pocket) {
             setNowShowing(nowShowing_data_pocket?.response)
@@ -50,76 +50,86 @@ const Home = ({ navigation }) => {
         );
     }
     console.log(loading);
-if( loading){
-    return <CustomLoder/>
-}else{
-    return (
+    if (loading) {
+        return <CustomLoder />
+    } else {
+        return (
 
-        <ScrollView style={styles.mainBody}>
-            <View style={styles.headerStyle}>
-                <Image
-                    source={Union}
+            <ScrollView style={styles.mainBody}>
+                <View style={styles.headerStyle}>
+                    <TouchableOpacity onPress={()=>setVisible(!isVisible)}>
+                        <Image
+                            source={Union}
+                        />
+                    </TouchableOpacity>
+                    <Text style={styles.textStyle}>
+                        FilmKu
+                    </Text>
+
+                    <Image
+                        source={bellIcon}
+                    />
+                </View>
+                {
+                    isVisible&&
+                    <View style={{ ...styles.modal}}>
+                    <TouchableOpacity onPress={()=>navigation.navigate('Login')}>
+                    <Text style={styles.logout}>LoginOut</Text>
+                    </TouchableOpacity>
+                </View>
+                }
+              
+                <View style={styles.headerStyle}>
+
+                    <Text style={{ ...styles.textStyle ,}}>
+                        Now Showing
+                    </Text>
+                </View>
+
+                <FlatList
+                    horizontal
+                    pagingEnabled={true}
+                    showsHorizontalScrollIndicator={false}
+                    legacyImplementation={false}
+                    data={nowShowing}
+                    renderItem={item => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('MovieDetails', { item })}
+                            >
+                                <NowShowingCard item={item} imageBaseUrl={imageBaseUrl} />
+                            </TouchableOpacity>
+                        )
+                    }}
+                    style={{ paddingHorizontal: 24 }}
+                    ItemSeparatorComponent={ItemDivider}
+                    keyExtractor={(item, index) => index.toString()}
                 />
 
-                <Text style={styles.textStyle}>
-                    FilmKu
+                <Text style={{ ...styles.textStyle, marginVertical: 11, marginLeft: 24 }}>
+                    Popular
                 </Text>
-
-                <Image
-                    source={bellIcon}
+                <FlatList
+                    pagingEnabled={true}
+                    showsHorizontalScrollIndicator={false}
+                    legacyImplementation={false}
+                    data={popular}
+                    renderItem={item => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('MovieDetails', { item })}
+                            >
+                                <PopularCard item={item} imageBaseUrl={imageBaseUrl} />
+                            </TouchableOpacity>
+                        )
+                    }}
+                    style={{ marginRight: 24 }}
+                    keyExtractor={(item, index) => index.toString()}
                 />
-            </View>
-            <View style={styles.headerStyle}>
+            </ScrollView>
+        )
+    }
 
-                <Text style={{ ...styles.textStyle }}>
-                    Now Showing
-                </Text>
-            </View>
-
-            <FlatList
-                horizontal
-                pagingEnabled={true}
-                showsHorizontalScrollIndicator={false}
-                legacyImplementation={false}
-                data={nowShowing}
-                renderItem={item => {
-                    return (
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('MovieDetails', { item })}
-                        >
-                            <NowShowingCard item={item} imageBaseUrl={imageBaseUrl} />
-                        </TouchableOpacity>
-                    )
-                }}
-                style={{ paddingHorizontal: 24 }}
-                ItemSeparatorComponent={ItemDivider}
-                keyExtractor={(item, index) => index.toString()}
-            />
-
-            <Text style={{ ...styles.textStyle, marginVertical: 11, marginLeft: 24 }}>
-                Popular
-            </Text>
-            <FlatList
-                pagingEnabled={true}
-                showsHorizontalScrollIndicator={false}
-                legacyImplementation={false}
-                data={popular}
-                renderItem={item => {
-                    return (
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('MovieDetails', { item })}
-                        >
-                            <PopularCard item={item} imageBaseUrl={imageBaseUrl} />
-                        </TouchableOpacity>
-                    )
-                }}
-                style={{ marginRight: 24 }}
-                keyExtractor={(item, index) => index.toString()}
-            />
-        </ScrollView>
-    )
-}
-   
 }
 
 export default Home
@@ -147,7 +157,31 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         color: "#AAA9B1"
     },
-
+    modal:{
+        width:150,
+        height:100,
+        paddingHorizontal:20,
+        borderRadius:3,
+        borderWidth:0.5,
+        borderColor:"#000",
+        alignItems:"center",
+        justifyContent:"center",
+        position:"absolute",
+        top:50,
+        left:35,
+        backgroundColor:"#fff",
+        zIndex:1
+    },
+    logout:{
+        fontSize: 15,
+        borderRadius: 10,
+        borderColor: "#000",
+        borderWidth: 1,
+        paddingHorizontal: 8,
+        paddingVertical: 5,
+        color: "#000",
+        opacity:0.6
+    }
 })
 
 const dataMovies = [

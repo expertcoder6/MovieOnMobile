@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "883884939923",
+    "project_id": "movieonmobile-115d3",
+    "storage_bucket": "movieonmobile-115d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883884939923:android:c9821f9112ff2a070b4b66",
+        "android_client_info": {
+          "package_name": "com.movieonmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "883884939923-o1vfk9r9b8k7l0b79i4a4sb161otof2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASaYoyDNmQyMbzx3S-k278XZwbz9huAmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "883884939923-o1vfk9r9b8k7l0b79i4a4sb161otof2n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "883884939923-0vfl2dpa0tnqph54csvp1cn30j0l2jbj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.MovieOnMobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

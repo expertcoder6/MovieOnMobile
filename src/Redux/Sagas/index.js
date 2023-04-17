@@ -1,49 +1,60 @@
 import { takeEvery, put, all, takeLatest, call } from 'redux-saga/effects';
 import axios from "axios";
+import auth from '@react-native-firebase/auth';
+
 const baseUrl = `https://api.themoviedb.org/3/`
 
 export function* apiCall(data) {
-try{
-
     const result = yield call(requestServer, data);
-yield put({ type: "SERVER_RESPONSE", payload: result })
-
-}catch(err){
+    yield put({ type: "SERVER_RESPONSE", payload: result })
 
 }
 
+export function* loginRequestApi(data) {
+    const result = yield call(loginFirebase, data);
+    if(result?.result){
+        yield put({ type: "SERVER_RESPONSE", payload: result })
 
+    }else{
+        yield put({ type: "SERVER_ERROR", payload: result })
+    }
 
-
-// requestServer(data).then(function*(data_obj){
-// yield put({ type: "SERVER_RESPONSE", payload: data_obj })
-
-// }).catch((err)=>{})
-
-//     // yield put({ type: "SERVER_ERROR" })
 
 }
 
+export function* signupRequestApi(data) {
+    const result = yield call(signupFirebase, data);
+
+    if(result?.result){
+        yield put({ type: "SERVER_RESPONSE", payload: result })
+
+    }else{
+        yield put({ type: "SERVER_ERROR", payload: result })
+    }
+
+
+}
 
 export function* productSaga(data) {
     console.log('=-=-=-=--=-=-=-=de')
     yield takeEvery("SERVER_REQUEST", apiCall)
+    yield takeEvery("LOGIN_REQUEST", loginRequestApi)
+    yield takeEvery("SIGNUP_REQUEST", signupRequestApi)
+
 }
 
- function requestServer(data) {
-   return new Promise((res, rej) => {
+function requestServer(data) {
+    return new Promise((res, rej) => {
         var data_obj = {}
         axios.get(`${baseUrl}${data?.payload?.endPoint}`)
             .then(function (response) {
                 console.log("-------API_RESPONSE---------");
                 data_obj = {
-                    data: data?.payload?.responseType? response?.data:response?.data?.results,
+                    data: data?.payload?.responseType ? response?.data : response?.data?.results,
                     key: data.payload.key,
                 }
-                // yield put({ type: "SERVER_RESPONSE", payload: data_obj })
-                // return data_obj
                 res(data_obj)
-                
+
             })
             .catch(function (error) {
                 data_obj = {
@@ -51,9 +62,62 @@ export function* productSaga(data) {
                     key: data.payload.key,
                 }
                 console.log('------error-------');
-                // return data_obj
                 rej(data_obj)
             });
     });
 
-}
+};
+
+function loginFirebase(data) {
+    return new Promise((res, rej) => {
+        var data_obj = {}
+
+        auth().signInWithEmailAndPassword(data?.payload?.email, data?.payload?.password).
+            then((user) => {
+                console.log("-------FIRE_BASE_LOGIN--------");
+                data_obj = {
+                    data: user?.user,
+                    key: data.payload.key,
+                    result:true
+                }
+                res(data_obj)
+                
+            }).catch((error) => {
+                console.log('------error-------');
+                data_obj = {
+                    data: error,
+                    key: data.payload.key,
+                    result:false
+                }
+                res(data_obj)
+            })
+
+    })
+};
+
+
+function signupFirebase(data) {
+
+    return new Promise((response, rej) => {
+        var data_obj = {}
+        auth().createUserWithEmailAndPassword(data?.payload?.email, data?.payload?.password).
+            then((userCredentials) => {
+                if (userCredentials.user) {
+                    data_obj = {
+                        data: userCredentials.user,
+                        key: data.payload.key,
+                        result:true
+                    }
+                    response(data_obj)
+                }
+            }).catch((error) => {
+                data_obj = {
+                    data: error,
+                    key: data.payload.key,
+                    result:false
+                }
+                response(data_obj)
+            })
+
+    })
+};

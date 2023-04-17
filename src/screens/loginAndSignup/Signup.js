@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-login-and-signup/
 
 // Import React and Component
-import React, {useState, createRef} from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -14,28 +14,82 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
+
+import { useDispatch, useSelector } from 'react-redux';
+
 import CustomTextInput from '../../common/CustomTextInput';
+import { signupRequest } from '../../Redux/Action/action';
+import CustomLoder from '../../common/Loder';
 
-// import AsyncStorage from '@react-native-community/async-storage';
+const SignupScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { signup_data_pocket } = useSelector(state => state.MovieData)
+  const [error, setError] = useState(false)
+  const [loading, setLoading] =  React.useState(false)
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  })
+useEffect(()=>{
+    if (signup_data_pocket?.status) {
+      navigation.navigate('TabNavigation')
+      setLoading(false)
+    }else if(signup_data_pocket?.status===false){
+      alert(signup_data_pocket?.error)
+      setLoading(false)
+    }
 
-// import Loader from './Components/Loader';
+  }, [signup_data_pocket])
+  const handleSignup = () => {
+    if (!userData.name) {
+      setError(true)
+      return;
+    }
+    if (!userData.email) {
+      setError(true)
+      return;
+    }
+    if (!userData.password) {
+      setError(true)
+      return;
+    }
+    if (!userData.confirmPassword) {
+      setError(true)
+      return;
+    }
+    if (userData.confirmPassword !== userData.password) {
+      setError(true)
+      return;
+    };
+    setLoading(true)
+    dispatch(signupRequest({
+      key: 'signup_data_pocket',
+      email: userData?.email,
+      password: userData.password,
+      name: userData.name
+    }))
 
-const SignupScreen = ({navigation}) => {
-
-
+  }
+  if (loading) {
+    return <CustomLoder />
+} else{
   return (
     <View style={styles.mainBody}>
       <ScrollView
         contentContainerStyle={{
           flex: 1,
           alignContent: 'center',
-          marginTop:50
-        }}>
+          marginTop: 50
+        }}
+
+        automaticallyAdjustKeyboardInsets={true}>
         <View>
           <KeyboardAvoidingView enabled>
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
               <Image
-                source={{uri:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tmdb.new.logo.svg/512px-Tmdb.new.logo.svg.png"}}
+                source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tmdb.new.logo.svg/512px-Tmdb.new.logo.svg.png" }}
                 style={{
                   width: '50%',
                   height: 100,
@@ -45,53 +99,75 @@ const SignupScreen = ({navigation}) => {
               />
             </View>
             <View style={styles.SectionStyle}>
-                <CustomTextInput
-               onChangeText={(text) =>
-                {}
-              }
-              placeholder="Enter Namne"
+              <CustomTextInput
+                onChangeText={(text) => { setUserData({ ...userData, name: text }), setError(false) }
+                }
+                placeholder="Enter Namne"
+                value={userData?.name}
+
               />
             </View>
+            {
+              error && !userData.name &&
+              <Text style={{ color: "red", marginVertical: -5, textAlign: "center" }}>Name is required</Text>}
             <View style={styles.SectionStyle}>
               <CustomTextInput
-               onChangeText={(text) =>
-               {}
-              }
-              placeholder="Enter Email"
+                onChangeText={(text) => { setUserData({ ...userData, email: text }), setError(false) }
+                }
+                placeholder="Enter Email"
+                value={userData?.email}
+
               />
             </View>
+            {
+              error && !userData.email &&
+              <Text style={{ color: "red", marginVertical: -5, textAlign: "center" }}>Email is required</Text>
+            }
+
             <View style={styles.SectionStyle}>
               <CustomTextInput
-               onChangeText={(text) =>
-               {}
-              }
-              placeholder="Enter Password"
-              />
-            </View>   
-            <View style={styles.SectionStyle}>
-              <CustomTextInput
-               onChangeText={(text) =>
-               {}
-              }
-              placeholder="Enter Confirm Password"
+                onChangeText={(text) => { setUserData({ ...userData, password: text }), setError(false) }
+                }
+                placeholder="Enter Password"
+                secureTextEntry={true}
+                value={userData?.password}
+
               />
             </View>
+            {
+              error && !userData.password &&
+              <Text style={{ color: "red", marginVertical: -5, textAlign: "center" }}>Password is required</Text>
+            }
+            <View style={styles.SectionStyle}>
+              <CustomTextInput
+                onChangeText={(text) => { setUserData({ ...userData, confirmPassword: text }), setError(false) }
+                }
+                placeholder="Enter Confirm Password"
+                secureTextEntry={true}
+                value={userData?.confirmPassword}
+
+              />
+            </View>
+            {
+              error && !userData.confirmPassword ?
+                <Text style={{ color: "red", marginVertical: -5, textAlign: "center" }}>Confirm Password is required</Text>
+                :
+                error && userData.confirmPassword && userData.password &&
+                <Text style={{ color: "red", marginVertical: -5, textAlign: "center" }}>password and Confirm Password Not Mach</Text>
+            }
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
-              >
-              <Text style={styles.buttonTextStyle}>LOGIN</Text>
+              onPress={() => handleSignup()}
+            >
+              <Text style={styles.buttonTextStyle}>SIGNUP</Text>
             </TouchableOpacity>
-            <Text
-              style={styles.registerTextStyle}
-              onPress={() => navigation.navigate('RegisterScreen')}>
-              New Here ? Register
-            </Text>
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
     </View>
   );
+          }
 };
 export default SignupScreen;
 
